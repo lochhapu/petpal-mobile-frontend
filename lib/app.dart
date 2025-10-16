@@ -37,6 +37,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PetPal',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       // Use home for the main app with bottom navigation
       home: Scaffold(

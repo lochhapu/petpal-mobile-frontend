@@ -1,15 +1,45 @@
 import 'package:flutter/material.dart';
 import '../core/constants/app_colors.dart';
+import 'profile_overlay.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
 
   @override
+  State<CustomAppBar> createState() => _CustomAppBarState();
+
+  @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  OverlayEntry? _overlayEntry;
+
+  void showProfileOverlay() {
+    // Remove any existing overlay first
+    hideProfileOverlay();
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => ProfileOverlay(onClose: hideProfileOverlay),
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void hideProfileOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  @override
+  void dispose() {
+    hideProfileOverlay();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    void _goToNotifications() {
+    void goToNotifications() {
       Navigator.pushNamed(context, '/notifications');
     }
 
@@ -21,9 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           // Profile section (left side)
           GestureDetector(
-            onTap: () {
-              // Optional: Add profile navigation if needed later
-            },
+            onTap: showProfileOverlay,
             child: Row(
               children: [
                 Container(
@@ -34,7 +62,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
-                    Icons.person,
+                    Icons.pets,
                     color: AppColors.primaryColor,
                     size: 20,
                   ),
@@ -65,7 +93,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
           // Notification icon (right side)
           IconButton(
-            onPressed: _goToNotifications,
+            onPressed: goToNotifications,
             icon: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
