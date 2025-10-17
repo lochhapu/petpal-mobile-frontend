@@ -5,11 +5,14 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       primaryColor: AppColors.primaryColor,
-      useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primaryColor,
         primary: AppColors.primaryColor,
+        secondary: AppColors.secondaryColor, // Add this
+        background: AppColors.backgroundColor, // Add this
       ),
+      useMaterial3: true,
+      scaffoldBackgroundColor: AppColors.backgroundColor, // Set scaffold bg
     );
   }
 }
