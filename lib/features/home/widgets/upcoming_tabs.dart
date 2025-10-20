@@ -59,6 +59,7 @@ class _UpcomingTabsState extends State<UpcomingTabs>
             ],
           ),
           child: TabBar(
+            dividerColor: Colors.transparent,
             controller: _tabController,
             indicator: BoxDecoration(
               color: AppColors.secondaryColor,
