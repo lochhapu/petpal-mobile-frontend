@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../pages/place_detail_page.dart'; // Add this import
 
 class PlaceCard extends StatelessWidget {
   final String title;
@@ -58,7 +59,21 @@ class PlaceCard extends StatelessWidget {
     final statusColor = _getStatusColor(status);
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PlaceDetailPage(
+              placeName: title,
+              placeType: type,
+              address: address,
+              status: status,
+              hours: hours,
+              rating: rating,
+            ),
+          ),
+        );
+      },
       child: Container(
         width: 280,
         height: 180, // Fixed height to prevent overflow
