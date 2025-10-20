@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../widgets/custom_app_bar.dart';
 import '../widgets/chat_message_bubble.dart';
 import '../widgets/chat_input_field.dart';
 import '../../../core/constants/app_colors.dart';

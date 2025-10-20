@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:petpal_frontend01/features/notifications/pages/notifications_page.dart';
+import '../../../features/notifications/pages/notifications_page.dart';
 import '../../../core/constants/app_colors.dart';
 
 class NotificationsList extends StatelessWidget {

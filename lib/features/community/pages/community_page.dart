@@ -4,7 +4,6 @@ import '../widgets/chat_header.dart';
 import '../widgets/contacts_section.dart';
 import '../widgets/messages_list.dart';
 import '../../../core/constants/app_colors.dart';
-import 'chat_screen.dart';
 
 class CommunityPage extends StatelessWidget {
   const CommunityPage({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:petpal_frontend01/features/community/pages/chat_screen.dart';
+import '../../../features/community/pages/chat_screen.dart';
 import '../../../core/constants/app_colors.dart';
 
 class ChatMessageBubble extends StatelessWidget {
