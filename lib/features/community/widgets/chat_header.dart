@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../widgets/contact_selection_panel.dart'; // We'll create this
 
 class ChatHeader extends StatelessWidget {
   const ChatHeader({super.key});
+
+  void _showNewChatPanel(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Allows the panel to take most of the screen
+      backgroundColor: Colors.transparent,
+      builder: (context) => const ContactSelectionPanel(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +33,7 @@ class ChatHeader extends StatelessWidget {
               ),
               const Spacer(),
               IconButton(
-                onPressed: () {
-                  // Navigate to new chat page
-                  print('Start new chat');
-                },
+                onPressed: () => _showNewChatPanel(context),
                 icon: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -52,15 +59,15 @@ class ChatHeader extends StatelessWidget {
                 hintText: 'Search here...',
                 hintStyle: TextStyle(
                   color: Colors.grey[600],
-                  height: 1.0, // Remove extra height
+                  height: 1.0,
                 ),
                 prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 15, // Adjusted to center the text vertically
+                  vertical: 15,
                 ),
-                isDense: true, // Reduces the overall height
+                isDense: true,
               ),
               onChanged: (value) {
                 // Your friend will implement search functionality
