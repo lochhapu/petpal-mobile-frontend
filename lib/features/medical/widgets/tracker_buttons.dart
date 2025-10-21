@@ -1,82 +1,80 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../pages/symptom_tracker_page.dart';
+import '../pages/treatment_tracker_page.dart'; // Add this import
 
 class TrackerButtons extends StatelessWidget {
   const TrackerButtons({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Section Title
-        const Text(
-          'Trackers',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: AppColors.primaryColor,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildTrackerButton(
+              title: 'Treatment Tracker',
+              onPressed: () {
+                // Navigate to treatment tracker page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TreatmentTrackerPage(),
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
-
-        // Buttons Row
-        Row(
-          children: [
-            Expanded(
-              child: _buildTrackerButton(
-                title: 'Symptom Tracker',
-                onTap: () {
-                  // Navigate to Symptom Tracker
-                  print('Navigate to Symptom Tracker');
-                },
-              ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildTrackerButton(
+              title: 'Symptom Tracker',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SymptomTrackerPage(),
+                  ),
+                );
+              },
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildTrackerButton(
-                title: 'Treatment Tracker',
-                onTap: () {
-                  // Navigate to Treatment Tracker
-                  print('Navigate to Treatment Tracker');
-                },
-              ),
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildTrackerButton({
     required String title,
-    required VoidCallback onTap,
+    required VoidCallback onPressed,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 80,
-        decoration: BoxDecoration(
-          color: AppColors.lightPink,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.secondaryColor.withOpacity(0.3)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+    return Container(
+      height: 44,
+      decoration: BoxDecoration(
+        color: AppColors.lightPink,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: AppColors.secondaryColor.withOpacity(0.3),
+          width: 1.5,
         ),
-        child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-            ),
-            textAlign: TextAlign.center,
+      ),
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primaryColor,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primaryColor,
           ),
         ),
       ),

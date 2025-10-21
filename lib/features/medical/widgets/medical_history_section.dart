@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../pages/full_medical_history_page.dart'; // Add this import
 
 class MedicalHistorySection extends StatelessWidget {
   const MedicalHistorySection({super.key});
@@ -10,43 +11,27 @@ class MedicalHistorySection extends StatelessWidget {
       'id': '1',
       'doctorName': 'Dr. Mirima | Zoe Fna 2014',
       'treatmentName': 'Worm Medicine',
-      'description': 'Toby was diagnosed with Worms. Received de-worming medicine.',
+      'description':
+          'Toby was diagnosed with Worms. Received de-worming medicine.',
     },
     {
       'id': '2',
       'doctorName': 'Dr. Monewell | Siza Jan 2004',
       'treatmentName': 'Second Official Check Up',
-      'description': 'Toby received his second check up. We have the second stage of vaccination planned.',
-    },
-    {
-      'id': '3',
-      'doctorName': 'Dr. Anderson | March 2023',
-      'treatmentName': 'Annual Checkup',
-      'description': 'Routine annual checkup completed. All vitals are normal and healthy.',
-    },
-    {
-      'id': '4',
-      'doctorName': 'Dr. Wilson | November 2022',
-      'treatmentName': 'Vaccination Update',
-      'description': 'Updated all required vaccinations. Next due in one year.',
-    },
-    {
-      'id': '5',
-      'doctorName': 'Dr. Parker | July 2022',
-      'treatmentName': 'Dental Examination',
-      'description': 'Teeth cleaning and dental checkup completed. No issues found.',
+      'description':
+          'Toby received his second check up. We have the second stage of vaccination planned.',
     },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section Title and View Full History Button
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
                 'Medical History',
@@ -56,63 +41,66 @@ class MedicalHistorySection extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
               ),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to full medical history
-                  print('View full medical history');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.secondaryColor,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              Container(
+                height: 36,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FullMedicalHistoryPage(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.secondaryColor,
+                    foregroundColor: Colors.white,
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                ),
-                child: const Text(
-                  'View Full History',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                  child: const Text(
+                    'View Full History',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
-          // Medical History List with Internal Scrolling
-          Container(
-            height: 300, // Fixed height to enable internal scrolling
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey[200]!),
-            ),
-            child: medicalHistory.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No medical history available',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey[200]!),
+              ),
+              child: medicalHistory.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No medical history available',
+                        style: TextStyle(color: Colors.grey, fontSize: 14),
                       ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: medicalHistory.length,
+                      itemBuilder: (context, index) {
+                        final history = medicalHistory[index];
+                        return MedicalHistoryCard(
+                          doctorName: history['doctorName'],
+                          treatmentName: history['treatmentName'],
+                          description: history['description'],
+                        );
+                      },
                     ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: medicalHistory.length,
-                    itemBuilder: (context, index) {
-                      final history = medicalHistory[index];
-                      return MedicalHistoryCard(
-                        doctorName: history['doctorName'],
-                        treatmentName: history['treatmentName'],
-                        description: history['description'],
-                      );
-                    },
-                  ),
+            ),
           ),
         ],
       ),
@@ -135,8 +123,8 @@ class MedicalHistoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
@@ -145,33 +133,28 @@ class MedicalHistoryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Doctor Name and Date
           Text(
             doctorName,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
               color: AppColors.primaryColor,
             ),
           ),
-          const SizedBox(height: 8),
-
-          // Treatment Name
+          const SizedBox(height: 6),
           Text(
             treatmentName,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryColor.withOpacity(0.8),
             ),
           ),
-          const SizedBox(height: 8),
-
-          // Description
+          const SizedBox(height: 6),
           Text(
             description,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               color: Colors.grey[700],
               height: 1.4,
             ),
