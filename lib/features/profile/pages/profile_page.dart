@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 import '../../../widgets/custom_app_bar.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../widgets/profile_preview_overlay.dart';
+import '../../../core/models/user_profile_model.dart';
+import 'manage_pets_page.dart';
+import 'edit_account_page.dart'; // Add this import
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
+  // Mock data - this will come from your backend
+  UserProfile get _currentUserProfile {
+    return UserProfile(
+      name: 'Chandani Lochana',
+      email: 'chandi.lochana@gmail.com',
+      phone: '+94 256 8909',
+      pets: [
+        Pet(name: 'Toby', description: 'Goes bananas for bananas!'),
+        Pet(name: 'Spy', description: 'Freaking psychopath!'),
+        Pet(name: 'Bazuka', description: 'Ugliest cutie of all time'),
+      ],
+      imageUrl: null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(), // Using your custom app bar
+      appBar: const CustomAppBar(),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
@@ -80,8 +99,12 @@ class ProfilePage extends StatelessWidget {
                 icon: Icons.visibility_outlined,
                 text: 'Preview Profile',
                 onTap: () {
-                  // Backend will implement
-                  print('Preview Profile tapped');
+                  // Show profile preview overlay
+                  showProfilePreview(
+                    context: context,
+                    userProfile: _currentUserProfile,
+                    isCurrentUser: true,
+                  );
                 },
               ),
               const SizedBox(height: 16),
@@ -90,18 +113,12 @@ class ProfilePage extends StatelessWidget {
                 icon: Icons.pets_outlined,
                 text: 'Manage Pets',
                 onTap: () {
-                  // Backend will implement
-                  print('Manage Pets tapped');
-                },
-              ),
-              const SizedBox(height: 16),
-
-              _buildProfileButton(
-                icon: Icons.history_outlined,
-                text: 'Account History',
-                onTap: () {
-                  // Backend will implement
-                  print('Account History tapped');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ManagePetsPage(),
+                    ),
+                  );
                 },
               ),
               const SizedBox(height: 16),
@@ -110,13 +127,27 @@ class ProfilePage extends StatelessWidget {
                 icon: Icons.edit_outlined,
                 text: 'Edit Account',
                 onTap: () {
-                  // Backend will implement
-                  print('Edit Account tapped');
+                  // Navigate to Edit Account page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          EditAccountPage(userProfile: _currentUserProfile),
+                    ),
+                  ).then((updatedProfile) {
+                    if (updatedProfile != null) {
+                      // Handle the updated profile here
+                      print(
+                        'Profile updated: ${(updatedProfile as UserProfile).name}',
+                      );
+                      // You would typically update your state here
+                    }
+                  });
                 },
               ),
               const SizedBox(height: 16),
 
-              // Logout button (with different styling)
+              // Logout button
               Container(
                 width: double.infinity,
                 height: 56,
@@ -127,7 +158,6 @@ class ProfilePage extends StatelessWidget {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    // Backend will implement logout
                     print('Logout tapped');
                   },
                   style: TextButton.styleFrom(

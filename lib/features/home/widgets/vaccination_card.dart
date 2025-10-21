@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/vaccination_details_page.dart';
 import '../../../core/constants/app_colors.dart';
 
 class VaccinationCard extends StatelessWidget {
@@ -31,7 +32,21 @@ class VaccinationCard extends StatelessWidget {
     final timeRangeColor = _getTimeRangeColor(timeRange);
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VaccinationDetailPage(
+              doctorName: doctorName,
+              clinicName: _extractClinicName(doctorName), // Helper method
+              vaccineName: vaccineName,
+              timeRange: timeRange,
+              vetImage: vetImage,
+              isVerified: true, // This would come from backend
+            ),
+          ),
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -120,4 +135,11 @@ class VaccinationCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _extractClinicName(String doctorName) {
+  // Simple extraction - backend would provide proper clinic name
+  if (doctorName.contains('Monroore')) return 'Hope Veterinary, Battaramula';
+  if (doctorName.contains('Mentos')) return 'Hope Veterinary, Battaramula';
+  return 'Local Veterinary Clinic'; // Default
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 
-class PlaceDetailPage extends StatelessWidget {
+class PlaceDetailPage extends StatefulWidget {
   final String placeName;
   final String placeType;
   final String address;
@@ -20,6 +20,87 @@ class PlaceDetailPage extends StatelessWidget {
   });
 
   @override
+  State<PlaceDetailPage> createState() => _PlaceDetailPageState();
+}
+
+class _PlaceDetailPageState extends State<PlaceDetailPage> {
+  int _selectedRating = 0;
+  final TextEditingController _reviewController = TextEditingController();
+  bool _isSubmittingReview = false;
+
+  @override
+  void dispose() {
+    _reviewController.dispose();
+    super.dispose();
+  }
+
+  void _submitReview() {
+    if (_selectedRating == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a rating'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSubmittingReview = true;
+    });
+
+    final reviewData = {
+      'rating': _selectedRating,
+      'comment': _reviewController.text,
+      'placeId': widget.placeName,
+    };
+
+    print('Submitting review: $reviewData');
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _isSubmittingReview = false;
+        _selectedRating = 0;
+        _reviewController.clear();
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Review submitted successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    });
+  }
+
+  void _showTimeSlotBookingOverlay(BuildContext context, String selectedTime) {
+    // Create an OverlayEntry
+    OverlayEntry? overlayEntry;
+    overlayEntry = OverlayEntry(
+      builder: (context) => _TimeSlotBookingOverlay(
+        selectedTime: selectedTime,
+        clinicName: widget.placeName,
+        onClose: () {
+          overlayEntry?.remove();
+        },
+        onSubmit: (time, reason) {
+          print('Booking confirmed for $time with reason: $reason');
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Appointment booked for $time!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        },
+      ),
+    );
+
+    // Insert the overlay into the Overlay
+    Overlay.of(context).insert(overlayEntry);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -30,7 +111,7 @@ class PlaceDetailPage extends StatelessWidget {
             color: AppColors.primaryColor,
           ),
           onPressed: () {
-            Navigator.pop(context); // Go back to explore page
+            Navigator.pop(context);
           },
         ),
         title: Text(
@@ -96,7 +177,7 @@ class PlaceDetailPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  _getIconForType(placeType),
+                  _getIconForType(widget.placeType),
                   color: Colors.white,
                   size: 30,
                 ),
@@ -109,23 +190,23 @@ class PlaceDetailPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      placeName,
+                      widget.placeName,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryColor,
                       ),
-                      maxLines: 2, // Allow title to wrap
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      address,
+                      widget.address,
                       style: TextStyle(
                         fontSize: 14,
                         color: AppColors.primaryColor.withOpacity(0.7),
                       ),
-                      maxLines: 2, // Allow address to wrap
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
@@ -139,20 +220,22 @@ class PlaceDetailPage extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: _getStatusColor(status).withOpacity(0.1),
+                            color: _getStatusColor(
+                              widget.status,
+                            ).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
-                            status,
+                            widget.status,
                             style: TextStyle(
                               fontSize: 12,
-                              color: _getStatusColor(status),
+                              color: _getStatusColor(widget.status),
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
                         Text(
-                          hours,
+                          widget.hours,
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColors.primaryColor.withOpacity(0.6),
@@ -168,15 +251,14 @@ class PlaceDetailPage extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          // Action Buttons - Moved to a separate row
+          // Action Buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(
                 child: TextButton(
                   onPressed: () {
-                    // Backend will implement call functionality
-                    print('Call $placeName');
+                    print('Call ${widget.placeName}');
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: AppColors.primaryColor,
@@ -212,8 +294,7 @@ class PlaceDetailPage extends StatelessWidget {
               Expanded(
                 child: TextButton(
                   onPressed: () {
-                    // Backend will implement message functionality
-                    print('Message $placeName');
+                    print('Message ${widget.placeName}');
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: AppColors.primaryColor,
@@ -274,7 +355,6 @@ class PlaceDetailPage extends StatelessWidget {
   }
 
   Widget _buildBookSlotSection() {
-    // Dummy data - backend will replace
     final availableDays = ['Tomorrow', 'Friday', 'Saturday'];
     final availableDoctors = ['Any', 'Dr. Smith', 'Dr. Johnson', 'Dr. Brown'];
     final availableSlots = [
@@ -333,9 +413,7 @@ class PlaceDetailPage extends StatelessWidget {
                           child: Text(day),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
-                        // Backend will implement
-                      },
+                      onChanged: (String? newValue) {},
                     ),
                   ),
                 ],
@@ -374,9 +452,7 @@ class PlaceDetailPage extends StatelessWidget {
                           child: Text(doctor),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
-                        // Backend will implement
-                      },
+                      onChanged: (String? newValue) {},
                     ),
                   ),
                 ],
@@ -386,7 +462,6 @@ class PlaceDetailPage extends StatelessWidget {
         ),
         const SizedBox(height: 20),
 
-        // Slots Available Text
         const Text(
           'Slots available tomorrow:',
           style: TextStyle(
@@ -397,7 +472,6 @@ class PlaceDetailPage extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // Time Slots Grid
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -419,8 +493,7 @@ class PlaceDetailPage extends StatelessWidget {
               ),
               child: TextButton(
                 onPressed: () {
-                  // Backend will implement slot selection
-                  print('Selected slot: ${availableSlots[index]}');
+                  _showTimeSlotBookingOverlay(context, availableSlots[index]);
                 },
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.primaryColor,
@@ -442,7 +515,6 @@ class PlaceDetailPage extends StatelessWidget {
   }
 
   Widget _buildReviewsSection() {
-    // Dummy reviews - backend will replace
     final reviews = [
       {
         'user': 'Toby Maguire',
@@ -497,7 +569,7 @@ class PlaceDetailPage extends StatelessWidget {
             Icon(Icons.star_half, color: Colors.amber, size: 20),
             const SizedBox(width: 8),
             Text(
-              rating.toString(),
+              widget.rating.toString(),
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -506,17 +578,11 @@ class PlaceDetailPage extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        /*
-        Text(
-          '#5E16TB', // Some identifier - backend will provide
-          style: TextStyle(
-            fontSize: 14,
-            color: AppColors.primaryColor.withOpacity(0.6),
-          ),
-        ),
-        */
         const SizedBox(height: 20),
+
+        // Write Review Section
+        _buildReviewInputSection(),
+        const SizedBox(height: 30),
 
         // Individual Reviews
         Column(
@@ -541,7 +607,6 @@ class PlaceDetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // User and Rating
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -569,8 +634,6 @@ class PlaceDetailPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-
-                  // Comment
                   Text(
                     review['comment'] as String,
                     style: TextStyle(
@@ -580,8 +643,6 @@ class PlaceDetailPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-
-                  // Time
                   Text(
                     review['time'] as String,
                     style: TextStyle(
@@ -594,31 +655,139 @@ class PlaceDetailPage extends StatelessWidget {
             );
           }).toList(),
         ),
+      ],
+    );
+  }
 
-        // Rate Us Button
-        Container(
-          width: double.infinity,
-          margin: const EdgeInsets.only(top: 16),
-          child: ElevatedButton(
-            onPressed: () {
-              // Backend will implement rating functionality
-              print('Rate us button pressed');
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondaryColor,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text(
-              'Rate Us',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+  Widget _buildReviewInputSection() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.lightPink,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.secondaryColor.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Write a Review',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryColor,
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: 16),
+
+          // Star Rating
+          const Text(
+            'How would you rate this place?',
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // Star Selection
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(5, (index) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedRating = index + 1;
+                  });
+                },
+                child: Icon(
+                  index < _selectedRating ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                  size: 40,
+                ),
+              );
+            }),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _selectedRating == 0
+                ? 'Select rating'
+                : '$_selectedRating out of 5',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.primaryColor.withOpacity(0.7),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Review Comment
+          const Text(
+            'Your review',
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: AppColors.secondaryColor.withOpacity(0.3),
+              ),
+            ),
+            child: TextField(
+              controller: _reviewController,
+              maxLines: 4,
+              decoration: const InputDecoration(
+                hintText: 'Share your experience...',
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(16),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Submit Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _isSubmittingReview ? null : _submitReview,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.secondaryColor,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                disabledBackgroundColor: AppColors.secondaryColor.withOpacity(
+                  0.5,
+                ),
+              ),
+              child: _isSubmittingReview
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const Text(
+                      'Submit Review',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -643,5 +812,243 @@ class PlaceDetailPage extends StatelessWidget {
       return Colors.red;
     }
     return Colors.orange;
+  }
+}
+
+// Time Slot Booking Overlay - Added as a private class in the same file
+class _TimeSlotBookingOverlay extends StatefulWidget {
+  final String selectedTime;
+  final String clinicName;
+  final VoidCallback onClose;
+  final Function(String, String) onSubmit;
+
+  const _TimeSlotBookingOverlay({
+    required this.selectedTime,
+    required this.clinicName,
+    required this.onClose,
+    required this.onSubmit,
+  });
+
+  @override
+  State<_TimeSlotBookingOverlay> createState() =>
+      __TimeSlotBookingOverlayState();
+}
+
+class __TimeSlotBookingOverlayState extends State<_TimeSlotBookingOverlay> {
+  final TextEditingController _reasonController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _reasonController.dispose();
+    super.dispose();
+  }
+
+  void _submitBooking() {
+    if (_reasonController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please provide a reason for your appointment'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    final bookingData = {
+      'time': widget.selectedTime,
+      'clinic': widget.clinicName,
+      'reason': _reasonController.text.trim(),
+    };
+
+    print('Submitting booking: $bookingData');
+
+    Future.delayed(const Duration(seconds: 2), () {
+      widget.onSubmit(widget.selectedTime, _reasonController.text.trim());
+      widget.onClose();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onClose,
+      behavior: HitTestBehavior.opaque,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          color: Colors.black.withOpacity(0.5),
+          child: Column(
+            children: [
+              const Spacer(),
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Book Appointment',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: widget.onClose,
+                            icon: const Icon(Icons.close, size: 24),
+                            color: AppColors.primaryColor,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${widget.clinicName} • ${widget.selectedTime}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.primaryColor.withOpacity(0.7),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Reason Input
+                      const Text(
+                        'Reason for appointment',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Let the clinic know why you\'re booking this appointment',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.primaryColor.withOpacity(0.6),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppColors.secondaryColor.withOpacity(0.3),
+                          ),
+                        ),
+                        child: TextField(
+                          controller: _reasonController,
+                          maxLines: 4,
+                          decoration: const InputDecoration(
+                            hintText:
+                                'e.g., Regular check-up, vaccination, health concern...',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(16),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'This will be sent to the clinic to help them prepare for your visit',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.primaryColor.withOpacity(0.5),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+
+                      // Action Buttons
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: widget.onClose,
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColors.primaryColor,
+                                side: BorderSide(
+                                  color: AppColors.secondaryColor.withOpacity(
+                                    0.3,
+                                  ),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                              ),
+                              child: const Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: _isSubmitting ? null : _submitBooking,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.secondaryColor,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                disabledBackgroundColor: AppColors
+                                    .secondaryColor
+                                    .withOpacity(0.5),
+                              ),
+                              child: _isSubmitting
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const Text(
+                                      'Confirm Booking',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

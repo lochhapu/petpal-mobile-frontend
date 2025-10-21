@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/appointment_details_page.dart';
 import '../../../core/constants/app_colors.dart';
 
 class AppointmentCard extends StatelessWidget {
@@ -24,7 +25,22 @@ class AppointmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AppointmentDetailPage(
+              clinicName: clinicName,
+              address: _extractAddress(clinicName),
+              status: status,
+              date: date,
+              appointmentNumber: appointmentNumber,
+              doctorName: 'Dr. Robert Monroore',
+              slotTime: date, // Or extract just the time part
+            ),
+          ),
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -118,4 +134,12 @@ class AppointmentCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _extractAddress(String clinicName) {
+  // Simple extraction - backend would provide proper address
+  if (clinicName.contains('Bartharamula')) return 'Bartharamula, Colombo';
+  if (clinicName.contains('Boston')) return 'Boston, MA';
+  if (clinicName.contains('Wijerama')) return 'Wijerama, Colombo';
+  return 'Colombo, Sri Lanka'; // Default
 }
