@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import 'place_card.dart';
+import '../pages/place_detail_page.dart'; // Add this import
 
-class RecentSearchesSection extends StatelessWidget {
+class RecentSearchesSection extends StatefulWidget {
   const RecentSearchesSection({super.key});
 
+  @override
+  State<RecentSearchesSection> createState() => _RecentSearchesSectionState();
+}
+
+class _RecentSearchesSectionState extends State<RecentSearchesSection> {
   // Mock data - backend will replace this
-  final List<Map<String, dynamic>> recentSearches = const [
+  List<Map<String, dynamic>> recentSearches = [
     {
       'id': '1',
       'title': 'Hope veterinary',
@@ -16,6 +22,7 @@ class RecentSearchesSection extends StatelessWidget {
       'rating': 4.3,
       'type': 'Clinic',
       'icon': 'clinic',
+      'isPinned': false,
     },
     {
       'id': '2',
@@ -26,6 +33,7 @@ class RecentSearchesSection extends StatelessWidget {
       'rating': 4.3,
       'type': 'Store',
       'icon': 'store',
+      'isPinned': false,
     },
     {
       'id': '3',
@@ -36,8 +44,18 @@ class RecentSearchesSection extends StatelessWidget {
       'rating': 4.3,
       'type': 'Shelter',
       'icon': 'view',
+      'isPinned': false,
     },
   ];
+
+  void _togglePin(int index) {
+    setState(() {
+      recentSearches[index]['isPinned'] = !recentSearches[index]['isPinned'];
+      print(
+        '${recentSearches[index]['title']} ${recentSearches[index]['isPinned'] ? 'pinned' : 'unpinned'}',
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +91,24 @@ class RecentSearchesSection extends StatelessWidget {
                   rating: place['rating'],
                   type: place['type'],
                   icon: place['icon'],
+                  isPinned: place['isPinned'],
                   onTap: () {
-                    // Backend will implement navigation
-                    print('Navigate to ${place['title']}');
+                    // Navigate to place detail page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlaceDetailPage(
+                          placeName: place['title'],
+                          placeType: place['type'],
+                          address: place['address'],
+                          status: place['status'],
+                          hours: place['hours'],
+                          rating: place['rating'],
+                        ),
+                      ),
+                    );
                   },
+                  onPinPressed: () => _togglePin(index),
                   showType: true,
                 );
               },

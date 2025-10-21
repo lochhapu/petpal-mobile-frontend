@@ -1,43 +1,51 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import 'place_card.dart';
+import '../pages/place_detail_page.dart'; // Add this import
 
-class TopPicksSection extends StatelessWidget {
+class TopPicksSection extends StatefulWidget {
   const TopPicksSection({super.key});
 
-  // Mock data - backend will replace this
-  final List<Map<String, dynamic>> topPicks = const [
-    {
-      'id': '1',
-      'title': 'Forever',
-      'address': 'Batharamula, Colombo',
-      'status': 'Open Now',
-      'hours': 'Closes 8:30 PM',
-      'rating': 4.3,
-      'type': 'Clinic',
-      'icon': 'clinic',
-    },
-    {
-      'id': '2',
-      'title': 'Free Bird Stores',
-      'address': 'Malabe, Colombo',
-      'status': 'Close',
-      'hours': 'Opens 7:30 AM',
-      'rating': 4.3,
-      'type': 'Store',
-      'icon': 'store',
-    },
+  @override
+  State<TopPicksSection> createState() => _TopPicksSectionState();
+}
+
+class _TopPicksSectionState extends State<TopPicksSection> {
+  // Mock data for top picks
+  final List<Map<String, dynamic>> topPicks = [
     {
       'id': '3',
-      'title': 'Wipey',
-      'address': 'Colombo',
+      'title': 'Animal Rescue Center',
+      'address': 'Kandy',
+      'status': 'Open Now',
+      'hours': 'Closes 6:00 PM',
+      'rating': 4.7,
+      'type': 'Shelter',
+      'icon': 'shelter',
+      'isPinned': false,
+    },
+    {
+      'id': '4',
+      'title': 'Pet Paradise Store',
+      'address': 'Gampaha',
       'status': 'Open Now',
       'hours': 'Closes 9:00 PM',
-      'rating': 4.3,
+      'rating': 4.5,
       'type': 'Store',
-      'icon': 'dog',
+      'icon': 'store',
+      'isPinned': false,
     },
+    // Add more places...
   ];
+
+  void _togglePin(int index) {
+    setState(() {
+      topPicks[index]['isPinned'] = !topPicks[index]['isPinned'];
+      print(
+        '${topPicks[index]['title']} ${topPicks[index]['isPinned'] ? 'pinned' : 'unpinned'}',
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +55,14 @@ class TopPicksSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Top Picks Near You',
+            'Top Picks For You',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: AppColors.primaryColor,
             ),
           ),
-
           const SizedBox(height: 16),
-
-          // Horizontal scrollable cards
           SizedBox(
             height: 190,
             child: ListView.builder(
@@ -73,10 +78,24 @@ class TopPicksSection extends StatelessWidget {
                   rating: place['rating'],
                   type: place['type'],
                   icon: place['icon'],
+                  isPinned: place['isPinned'],
                   onTap: () {
-                    // Backend will implement navigation
-                    print('Navigate to ${place['title']}');
+                    // Navigate to place detail page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlaceDetailPage(
+                          placeName: place['title'],
+                          placeType: place['type'],
+                          address: place['address'],
+                          status: place['status'],
+                          hours: place['hours'],
+                          rating: place['rating'],
+                        ),
+                      ),
+                    );
                   },
+                  onPinPressed: () => _togglePin(index),
                   showType: true,
                 );
               },

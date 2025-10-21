@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../pages/place_detail_page.dart'; // Add this import
+import '../pages/place_detail_page.dart';
 
 class PlaceCard extends StatelessWidget {
   final String title;
@@ -12,6 +12,8 @@ class PlaceCard extends StatelessWidget {
   final String icon;
   final VoidCallback onTap;
   final bool showType;
+  final bool isPinned;
+  final VoidCallback onPinPressed;
 
   const PlaceCard({
     super.key,
@@ -24,6 +26,8 @@ class PlaceCard extends StatelessWidget {
     required this.icon,
     required this.onTap,
     this.showType = true,
+    this.isPinned = false,
+    required this.onPinPressed,
   });
 
   Color _getStatusColor(String status) {
@@ -59,24 +63,10 @@ class PlaceCard extends StatelessWidget {
     final statusColor = _getStatusColor(status);
 
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PlaceDetailPage(
-              placeName: title,
-              placeType: type,
-              address: address,
-              status: status,
-              hours: hours,
-              rating: rating,
-            ),
-          ),
-        );
-      },
+      onTap: onTap,
       child: Container(
         width: 280,
-        height: 180, // Fixed height to prevent overflow
+        height: 180,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -90,142 +80,177 @@ class PlaceCard extends StatelessWidget {
           ],
           border: Border.all(color: AppColors.secondaryColor.withOpacity(0.1)),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            // Image/Icon section - fixed height
-            Container(
-              height: 80, // Further reduced
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.lightPink,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
+            // Main card content
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Image/Icon section
+                Container(
+                  height: 80,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.lightPink,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  child: Icon(
+                    _getIconForType(icon),
+                    color: AppColors.secondaryColor,
+                    size: 35,
+                  ),
                 ),
-              ),
-              child: Icon(
-                _getIconForType(icon),
-                color: AppColors.secondaryColor,
-                size: 35, // Further reduced
-              ),
-            ),
 
-            // Content - fixed height container
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(10), // Even smaller padding
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween, // Better spacing
-                  children: [
-                    // Title and Rating - top row
-                    Row(
+                // Content
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: const TextStyle(
-                              fontSize: 14, // Smaller
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primaryColor,
+                        // Title and Rating
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                title,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primaryColor,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                            const SizedBox(width: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.star, color: Colors.amber, size: 14),
+                                const SizedBox(width: 2),
+                                Text(
+                                  rating.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 6),
+
+                        // Address
+                        Text(
+                          address,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.primaryColor.withOpacity(0.7),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+
+                        // Status and Hours
                         Row(
                           children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                              size: 14, // Smaller
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: statusColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                status,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: statusColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
-                            const SizedBox(width: 2),
-                            Text(
-                              rating.toString(),
-                              style: const TextStyle(
-                                fontSize: 12, // Smaller
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.primaryColor,
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                hours,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.primaryColor.withOpacity(
+                                    0.6,
+                                  ),
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
 
-                    // Address
-                    Text(
-                      address,
-                      style: TextStyle(
-                        fontSize: 12, // Smaller
-                        color: AppColors.primaryColor.withOpacity(0.7),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    // Status and Hours
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2, // Even smaller
-                          ),
-                          decoration: BoxDecoration(
-                            color: statusColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            status,
-                            style: TextStyle(
-                              fontSize: 10, // Smaller
-                              color: statusColor,
-                              fontWeight: FontWeight.w500,
+                        // Type badge
+                        if (showType)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              type.toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 8,
+                                color: AppColors.secondaryColor,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            hours,
-                            style: TextStyle(
-                              fontSize: 10, // Smaller
-                              color: AppColors.primaryColor.withOpacity(0.6),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            // Pin Button - Top Right (using IconButton to properly handle taps)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: onPinPressed,
+                  borderRadius: BorderRadius.circular(15),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
-
-                    // Type badge
-                    if (showType)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.secondaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          type.toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 8, // Smaller
-                            color: AppColors.secondaryColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                  ],
+                    child: Icon(
+                      isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+                      color: isPinned ? AppColors.secondaryColor : Colors.grey,
+                      size: 16,
+                    ),
+                  ),
                 ),
               ),
             ),
