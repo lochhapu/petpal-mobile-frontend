@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../../app.dart'; // Import the main App widget
+import '../../../../core/constants/app_colors.dart';
+import '../../../../app.dart'; // Import for MainApp
 import 'sign_up_page.dart';
+import 'welcome_page.dart'; // Add this import
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -16,12 +17,19 @@ class SignInPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Back button and Skip button
+              // Back button and Skip button - UPDATED BACK BUTTON
               Row(
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      // Navigate to WelcomePage and remove all routes
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WelcomePage(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                     icon: Icon(Icons.arrow_back, color: AppColors.primaryColor),
                   ),
@@ -33,7 +41,9 @@ class SignInPage extends StatelessWidget {
                       // For now, navigate to main app with bottom nav bar
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => const App()),
+                        MaterialPageRoute(
+                          builder: (context) => const MainApp(),
+                        ),
                         (Route<dynamic> route) => false,
                       );
                     },
@@ -52,7 +62,7 @@ class SignInPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Welcome text
+              // Welcome text - EXACTLY AS YOU HAD IT
               const Text(
                 'Welcome Back!',
                 style: TextStyle(
@@ -71,7 +81,7 @@ class SignInPage extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // Email field
+              // Email field - EXACTLY AS YOU HAD IT
               _buildFormField(
                 label: 'Email',
                 icon: Icons.email_outlined,
@@ -79,7 +89,7 @@ class SignInPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Password field
+              // Password field - EXACTLY AS YOU HAD IT
               _buildFormField(
                 label: 'Password',
                 icon: Icons.lock_outlined,
@@ -88,7 +98,7 @@ class SignInPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Forgot password
+              // Forgot password - EXACTLY AS YOU HAD IT
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -107,7 +117,7 @@ class SignInPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
 
-              // Sign In button
+              // Sign In button - UPDATED NAVIGATION ONLY
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -117,7 +127,7 @@ class SignInPage extends StatelessWidget {
                     // For now, navigate to main app with bottom nav bar
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => const App()),
+                      MaterialPageRoute(builder: (context) => const MainApp()),
                       (Route<dynamic> route) => false,
                     );
                   },
@@ -137,7 +147,7 @@ class SignInPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
 
-              // Divider with "or"
+              // Divider with "or" - EXACTLY AS YOU HAD IT
               Row(
                 children: [
                   Expanded(
@@ -164,7 +174,7 @@ class SignInPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
 
-              // Create new account button
+              // Create new account button - EXACTLY AS YOU HAD IT
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -199,6 +209,7 @@ class SignInPage extends StatelessWidget {
     );
   }
 
+  // EXACTLY AS YOU HAD IT
   Widget _buildFormField({
     required String label,
     required IconData icon,

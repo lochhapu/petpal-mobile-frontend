@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../../app.dart'; // Import the main App widget
+import '../../../../core/constants/app_colors.dart';
+import '../../../../app.dart'; // Import for MainApp
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -15,7 +15,7 @@ class SignUpPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Back button
+              // Back button - EXACTLY AS YOU HAD IT
               IconButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -24,7 +24,7 @@ class SignUpPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Create account text
+              // Create account text - EXACTLY AS YOU HAD IT
               const Text(
                 'Create Account',
                 style: TextStyle(
@@ -43,7 +43,7 @@ class SignUpPage extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // Full name field
+              // Full name field - EXACTLY AS YOU HAD IT
               _buildFormField(
                 label: 'Full Name',
                 icon: Icons.person_outlined,
@@ -51,7 +51,7 @@ class SignUpPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Email field
+              // Email field - EXACTLY AS YOU HAD IT
               _buildFormField(
                 label: 'Email',
                 icon: Icons.email_outlined,
@@ -59,7 +59,7 @@ class SignUpPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Password field
+              // Password field - EXACTLY AS YOU HAD IT
               _buildFormField(
                 label: 'Password',
                 icon: Icons.lock_outlined,
@@ -68,7 +68,7 @@ class SignUpPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Confirm password field
+              // Confirm password field - EXACTLY AS YOU HAD IT
               _buildFormField(
                 label: 'Confirm Password',
                 icon: Icons.lock_outlined,
@@ -77,7 +77,7 @@ class SignUpPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
 
-              // Sign Up button
+              // Sign Up button - UPDATED NAVIGATION ONLY
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -87,7 +87,7 @@ class SignUpPage extends StatelessWidget {
                     // For now, navigate to main app with bottom nav bar
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => const App()),
+                      MaterialPageRoute(builder: (context) => const MainApp()),
                       (Route<dynamic> route) => false,
                     );
                   },
@@ -107,7 +107,7 @@ class SignUpPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
 
-              // Divider with "or"
+              // Divider with "or" - EXACTLY AS YOU HAD IT
               Row(
                 children: [
                   Expanded(
@@ -134,7 +134,7 @@ class SignUpPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
 
-              // Already have account button
+              // Already have account button - EXACTLY AS YOU HAD IT
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -164,6 +164,7 @@ class SignUpPage extends StatelessWidget {
     );
   }
 
+  // EXACTLY AS YOU HAD IT
   Widget _buildFormField({
     required String label,
     required IconData icon,
