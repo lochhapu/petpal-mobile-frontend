@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../widgets/custom_app_bar.dart';
 import 'treatment_detail_page.dart';
 
 class FullMedicalHistoryPage extends StatefulWidget {
@@ -18,17 +17,38 @@ class _FullMedicalHistoryPageState extends State<FullMedicalHistoryPage> {
       'doctor': 'Dr. Mentos',
       'date': '2nd Feb 2024',
       'title': 'Worm medicine',
-      'description': 'Toby was diagnosed with Worms. Received de-worming medicine.',
+      'description':
+          'Toby was diagnosed with Worms. Received de-worming medicine.',
       'treatmentDetails': {
         'medicine': 'Worm Medication',
         'description': 'Expels Deworming Tablets',
         'startDate': '12-Jun-2023',
         'endDate': '16-Jun-2023',
         'schedule': [
-          {'day': 'Day 1', 'morning': true, 'afternoon': false, 'evening': false},
-          {'day': 'Day 2', 'morning': false, 'afternoon': false, 'evening': false},
-          {'day': 'Day 3', 'morning': false, 'afternoon': false, 'evening': false},
-          {'day': 'Day 4', 'morning': false, 'afternoon': false, 'evening': false},
+          {
+            'day': 'Day 1',
+            'morning': true,
+            'afternoon': false,
+            'evening': false,
+          },
+          {
+            'day': 'Day 2',
+            'morning': false,
+            'afternoon': false,
+            'evening': false,
+          },
+          {
+            'day': 'Day 3',
+            'morning': false,
+            'afternoon': false,
+            'evening': false,
+          },
+          {
+            'day': 'Day 4',
+            'morning': false,
+            'afternoon': false,
+            'evening': false,
+          },
         ],
       },
     },
@@ -37,24 +57,22 @@ class _FullMedicalHistoryPageState extends State<FullMedicalHistoryPage> {
       'doctor': 'Dr. Momore',
       'date': '15th Jan 2024',
       'title': 'Second official check up',
-      'description': 'Toby received his second check up. We have the second stage of vaccinations planned.',
+      'description':
+          'Toby received his second check up. We have the second stage of vaccinations planned.',
     },
     {
       'id': '3',
       'doctor': 'Dr. Mentos',
       'date': '1st Jan 2024',
       'title': 'First official check up',
-      'description': 'Toby received his first official check up. We have the first stage of vaccinations planned.',
+      'description':
+          'Toby received his first official check up. We have the first stage of vaccinations planned.',
     },
   ];
 
-  final List<String> longTermIssues = [
-    'Consistent toe infection.',
-  ];
+  final List<String> longTermIssues = ['Consistent toe infection.'];
 
-  final List<String> allergies = [
-    'Canned fish.',
-  ];
+  final List<String> allergies = ['Canned fish.'];
 
   void _showTreatmentDetails(Map<String, dynamic> treatment) {
     if (treatment['treatmentDetails'] != null) {
@@ -62,9 +80,8 @@ class _FullMedicalHistoryPageState extends State<FullMedicalHistoryPage> {
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        builder: (context) => TreatmentDetailPage(
-          treatment: treatment['treatmentDetails'],
-        ),
+        builder: (context) =>
+            TreatmentDetailPage(treatment: treatment['treatmentDetails']),
       );
     }
   }
@@ -73,7 +90,56 @@ class _FullMedicalHistoryPageState extends State<FullMedicalHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CustomAppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Row(
+          children: [
+            // Profile section (left side) - Same as CustomAppBar but without onTap
+            Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.pets,
+                    color: AppColors.primaryColor,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Toby',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    Text(
+                      'Goes bananas for bananas!',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -99,7 +165,9 @@ class _FullMedicalHistoryPageState extends State<FullMedicalHistoryPage> {
                 decoration: BoxDecoration(
                   color: AppColors.lightPink,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.secondaryColor.withOpacity(0.3)),
+                  border: Border.all(
+                    color: AppColors.secondaryColor.withOpacity(0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -127,7 +195,9 @@ class _FullMedicalHistoryPageState extends State<FullMedicalHistoryPage> {
                 child: ListView(
                   children: [
                     // Medical History Items
-                    ...medicalHistory.map((history) => _buildMedicalHistoryItem(history)).toList(),
+                    ...medicalHistory
+                        .map((history) => _buildMedicalHistoryItem(history))
+                        .toList(),
 
                     const SizedBox(height: 24),
 
@@ -140,10 +210,7 @@ class _FullMedicalHistoryPageState extends State<FullMedicalHistoryPage> {
                     const SizedBox(height: 20),
 
                     // Allergies section
-                    _buildSection(
-                      title: 'Allergies:',
-                      items: allergies,
-                    ),
+                    _buildSection(title: 'Allergies:', items: allergies),
                   ],
                 ),
               ),
@@ -156,7 +223,7 @@ class _FullMedicalHistoryPageState extends State<FullMedicalHistoryPage> {
 
   Widget _buildMedicalHistoryItem(Map<String, dynamic> history) {
     final hasTreatment = history['treatmentDetails'] != null;
-    
+
     return GestureDetector(
       onTap: hasTreatment ? () => _showTreatmentDetails(history) : null,
       child: Container(
@@ -242,31 +309,35 @@ class _FullMedicalHistoryPageState extends State<FullMedicalHistoryPage> {
             ),
           ),
           const SizedBox(height: 8),
-          ...items.map((item) => Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Row(
-              children: [
-                Container(
-                  width: 6,
-                  height: 6,
-                  margin: const EdgeInsets.only(right: 12),
-                  decoration: const BoxDecoration(
-                    color: AppColors.secondaryColor,
-                    shape: BoxShape.circle,
+          ...items
+              .map(
+                (item) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: const BoxDecoration(
+                          color: AppColors.secondaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: Text(
-                    item,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )).toList(),
+              )
+              .toList(),
         ],
       ),
     );
