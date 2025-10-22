@@ -4,7 +4,8 @@ import '../../../core/constants/app_colors.dart';
 import '../../../widgets/profile_preview_overlay.dart';
 import '../../../core/models/user_profile_model.dart';
 import 'manage_pets_page.dart';
-import 'edit_account_page.dart'; // Add this import
+import 'edit_account_page.dart';
+import '../../authentication/pages/sign_in_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -21,6 +22,72 @@ class ProfilePage extends StatelessWidget {
         Pet(name: 'Bazuka', description: 'Ugliest cutie of all time'),
       ],
       imageUrl: null,
+    );
+  }
+
+  void _showLogoutConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'Logout',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryColor,
+            ),
+          ),
+          content: const Text(
+            'Are you sure you want to logout?',
+            style: TextStyle(fontSize: 16, color: AppColors.primaryColor),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primaryColor,
+              ),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                _performLogout(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Logout'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _performLogout(BuildContext context) {
+    // TODO: BACKEND IMPLEMENTATION NEEDED HERE
+    // 1. Call your authentication service logout method
+    // 2. Clear any local storage (tokens, user data, etc.)
+    // 3. Handle any cleanup operations
+
+    print('BACKEND: Implement logout logic here');
+
+    // After backend logout is successful, navigate to sign in page
+    // This clears the navigation stack so user can't go back to authenticated pages
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const SignInPage()),
+      (Route<dynamic> route) => false,
     );
   }
 
@@ -157,9 +224,9 @@ class ProfilePage extends StatelessWidget {
                   border: Border.all(color: Colors.red.withOpacity(0.3)),
                 ),
                 child: TextButton(
-                  onPressed: () {
-                    print('Logout tapped');
-                  },
+                  // TODO: BACKEND - This shows logout confirmation dialog
+                  // The actual logout happens in _performLogout method
+                  onPressed: () => _showLogoutConfirmation(context),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.red,
                     shape: RoundedRectangleBorder(
