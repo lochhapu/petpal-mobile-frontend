@@ -105,10 +105,7 @@ class _SymptomTrackerPageState extends State<SymptomTrackerPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.primaryColor,
-          ),
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primaryColor),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -222,7 +219,7 @@ class _SymptomTrackerPageState extends State<SymptomTrackerPage> {
               ),
               const SizedBox(height: 20),
 
-              // Edit Mode Toggle - FIXED OVERFLOW
+              // Edit Mode Toggle
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -257,13 +254,10 @@ class _SymptomTrackerPageState extends State<SymptomTrackerPage> {
                           horizontal: 12,
                           vertical: 8,
                         ),
-                        minimumSize:
-                            Size.zero, // Remove minimum size constraints
+                        minimumSize: Size.zero,
                       ),
                       child: Text(
-                        isEditMode
-                            ? 'Done'
-                            : 'Edit', // Shorter text to prevent overflow
+                        isEditMode ? 'Done' : 'Edit',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -311,7 +305,7 @@ class _SymptomTrackerPageState extends State<SymptomTrackerPage> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 60), // Space for action buttons
+                    SizedBox(width: 80), // Space for action buttons
                   ],
                 ),
               ),
@@ -351,14 +345,18 @@ class _SymptomTrackerPageState extends State<SymptomTrackerPage> {
               padding: const EdgeInsets.all(12),
               color: index % 2 == 0 ? Colors.white : Colors.grey[50],
               child: symptom['isEditing']
-                  ? TextField(
-                      controller: editController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.all(8),
-                        isDense: true,
+                  ? SizedBox(
+                      height:
+                          40, // Fixed height for TextField to prevent overflow
+                      child: TextField(
+                        controller: editController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.all(8),
+                          isDense: true,
+                        ),
+                        onSubmitted: (value) => _updateSymptom(index, value),
                       ),
-                      onSubmitted: (value) => _updateSymptom(index, value),
                     )
                   : Text(
                       symptom['symptom'],
@@ -381,54 +379,54 @@ class _SymptomTrackerPageState extends State<SymptomTrackerPage> {
 
           // Action Buttons Column - FIXED OVERFLOW
           Container(
-            width: 60, // Slightly wider to prevent overflow
+            width: 80, // Increased width to prevent overflow
             color: index % 2 == 0 ? Colors.white : Colors.grey[50],
             child: isEditMode
                 ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       // Edit/Save Button
-                      IconButton(
-                        onPressed: () {
-                          if (symptom['isEditing']) {
-                            _updateSymptom(index, editController.text);
-                          } else {
-                            setState(() {
-                              symptom['isEditing'] = true;
-                            });
-                          }
-                        },
-                        icon: Icon(
-                          symptom['isEditing'] ? Icons.check : Icons.edit,
-                          color: symptom['isEditing']
-                              ? Colors.green
-                              : AppColors.primaryColor,
-                          size: 18,
-                        ),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(
-                          minWidth: 30,
-                          minHeight: 30,
+                      Container(
+                        width: 32,
+                        height: 32,
+                        child: IconButton(
+                          onPressed: () {
+                            if (symptom['isEditing']) {
+                              _updateSymptom(index, editController.text);
+                            } else {
+                              setState(() {
+                                symptom['isEditing'] = true;
+                              });
+                            }
+                          },
+                          icon: Icon(
+                            symptom['isEditing'] ? Icons.check : Icons.edit,
+                            color: symptom['isEditing']
+                                ? Colors.green
+                                : AppColors.primaryColor,
+                            size: 16,
+                          ),
+                          padding: EdgeInsets.zero,
                         ),
                       ),
 
                       // Delete Button
-                      IconButton(
-                        onPressed: () => _deleteSymptom(index),
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                          size: 18,
-                        ),
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(
-                          minWidth: 30,
-                          minHeight: 30,
+                      Container(
+                        width: 32,
+                        height: 32,
+                        child: IconButton(
+                          onPressed: () => _deleteSymptom(index),
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 16,
+                          ),
+                          padding: EdgeInsets.zero,
                         ),
                       ),
                     ],
                   )
-                : const SizedBox(width: 60),
+                : const SizedBox(width: 80),
           ),
         ],
       ),
