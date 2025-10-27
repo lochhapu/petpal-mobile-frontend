@@ -45,16 +45,10 @@ class TreatmentDetailPage extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: AppColors.primaryColor,
-                ),
+                icon: Icon(Icons.close, color: AppColors.primaryColor),
                 onPressed: () => Navigator.pop(context),
                 padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(
-                  minWidth: 40,
-                  minHeight: 40,
-                ),
+                constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
               ),
             ],
           ),
@@ -68,7 +62,9 @@ class TreatmentDetailPage extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.lightPink,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.secondaryColor.withOpacity(0.3)),
+              border: Border.all(
+                color: AppColors.secondaryColor.withOpacity(0.3),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,10 +80,7 @@ class TreatmentDetailPage extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   treatment['description'],
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.lightBlue,
-                  ),
+                  style: TextStyle(fontSize: 14, color: AppColors.lightBlue),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -115,9 +108,7 @@ class TreatmentDetailPage extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Schedule Table
-          Expanded(
-            child: _buildScheduleTable(treatment['schedule']),
-          ),
+          Expanded(child: _buildScheduleTable(treatment['schedule'])),
         ],
       ),
     );
@@ -135,53 +126,60 @@ class TreatmentDetailPage extends StatelessWidget {
               topRight: Radius.circular(8),
             ),
           ),
-          child: const Row(
+          child: Row(
             children: [
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   child: Text(
                     'Day',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 14, // Added explicit font size
                     ),
                   ),
                 ),
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   child: Text(
                     'Morning',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 12, // Reduced from default
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   child: Text(
                     'Afternoon',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 12, // Reduced from default
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
                   child: Text(
                     'Evening',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 12, // Reduced from default
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
@@ -197,9 +195,7 @@ class TreatmentDetailPage extends StatelessWidget {
               final day = schedule[index];
               return Container(
                 decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.grey[300]!),
-                  ),
+                  border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
                 ),
                 child: Row(
                   children: [
@@ -212,6 +208,7 @@ class TreatmentDetailPage extends StatelessWidget {
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             color: AppColors.primaryColor,
+                            fontSize: 14,
                           ),
                         ),
                       ),
@@ -245,24 +242,22 @@ class TreatmentDetailPage extends StatelessWidget {
   }
 
   Widget _buildCheckbox(bool isChecked) {
-    return Container(
-      width: 24,
-      height: 24,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: isChecked ? AppColors.secondaryColor : Colors.grey,
-          width: 2,
+    return Center(
+      child: Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isChecked ? AppColors.secondaryColor : Colors.grey,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(4),
+          color: isChecked ? AppColors.secondaryColor : Colors.transparent,
         ),
-        borderRadius: BorderRadius.circular(4),
-        color: isChecked ? AppColors.secondaryColor : Colors.transparent,
+        child: isChecked
+            ? const Icon(Icons.check, size: 16, color: Colors.white)
+            : null,
       ),
-      child: isChecked
-          ? const Icon(
-              Icons.check,
-              size: 16,
-              color: Colors.white,
-            )
-          : null,
     );
   }
 
@@ -270,13 +265,7 @@ class TreatmentDetailPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: AppColors.lightBlue,
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 12, color: AppColors.lightBlue)),
         const SizedBox(height: 4),
         Text(
           date,

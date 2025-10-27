@@ -413,53 +413,60 @@ class _TreatmentTrackerPageState extends State<TreatmentTrackerPage> {
                 topRight: Radius.circular(8),
               ),
             ),
-            child: const Row(
+            child: Row(
               children: [
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10), // Reduced padding
                     child: Text(
                       'Day',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: 12, // Reduced from 14
                       ),
                     ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10), // Reduced padding
                     child: Text(
                       'Morning',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: 10, // Reduced from 12
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10), // Reduced padding
                     child: Text(
                       'Afternoon',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: 10, // Reduced from 12
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(10), // Reduced padding
                     child: Text(
                       'Evening',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        fontSize: 10, // Reduced from 12
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
@@ -483,7 +490,7 @@ class _TreatmentTrackerPageState extends State<TreatmentTrackerPage> {
                     children: [
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(10), // Reduced padding
                           color: index % 2 == 0
                               ? Colors.white
                               : Colors.grey[50],
@@ -492,37 +499,44 @@ class _TreatmentTrackerPageState extends State<TreatmentTrackerPage> {
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: AppColors.primaryColor,
+                              fontSize: 12, // Reduced from 14
                             ),
                           ),
                         ),
                       ),
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(10), // Reduced padding
                           child: GestureDetector(
                             onTap: () =>
                                 _updateTreatmentProgress(index, 'morning'),
-                            child: _buildCheckbox(day['morning']),
+                            child: Center(
+                              child: _buildCheckbox(day['morning']),
+                            ),
                           ),
                         ),
                       ),
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(10), // Reduced padding
                           child: GestureDetector(
                             onTap: () =>
                                 _updateTreatmentProgress(index, 'afternoon'),
-                            child: _buildCheckbox(day['afternoon']),
+                            child: Center(
+                              child: _buildCheckbox(day['afternoon']),
+                            ),
                           ),
                         ),
                       ),
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(10), // Reduced padding
                           child: GestureDetector(
                             onTap: () =>
                                 _updateTreatmentProgress(index, 'evening'),
-                            child: _buildCheckbox(day['evening']),
+                            child: Center(
+                              child: _buildCheckbox(day['evening']),
+                            ),
                           ),
                         ),
                       ),
